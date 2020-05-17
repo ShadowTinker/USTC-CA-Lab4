@@ -1,5 +1,5 @@
 *.pdf
-*.md
+README.md
 *.docx
 *.zip
 Test/*

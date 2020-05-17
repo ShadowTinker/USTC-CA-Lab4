@@ -60,6 +60,8 @@ module Ctrl_EX(
     input wire [3:0] cache_write_en_ID,
     input wire alu_src1_ID,
     input wire [1:0] alu_src2_ID,
+    input wire found_ID,
+    output wire found_EX,
     output reg jalr_EX,
     output reg [3:0] ALU_func_EX,
     output reg [2:0] br_type_EX,

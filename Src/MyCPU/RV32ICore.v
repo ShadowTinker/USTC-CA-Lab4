@@ -83,7 +83,14 @@ module RV32ICore(
     wire csr_write_WB,csr_read_WB,csr_set_WB,csr_clear_WB,csr_select_WB;
     wire [31:20] csr_wb_addr_WB;
     wire [11:7] csr_rd_WB;
+    //BTB signal
+    wire found_IF;
+    wire found_ID;
+    wire found_EX;
+    wire [31:0] real_PC_EX;
+    wire fail;
 
+    assign real_PC_EX = PC_EX - 4;
     // Adder to compute PC + 4
     assign PC_4 = PC_IF + 4;
     // MUX for op2 source
@@ -147,6 +154,20 @@ module RV32ICore(
     // IF stage
     // ---------------------------------------------
 
+    BTB BTB1(
+        .clk(CPU_CLK),
+        .rst(CPU_RST),
+        .PC_IF(PC_IF),
+        .found_IF(found_IF),
+        .NPC_predicted_IF(PC_4),
+        .branch_EX(br_type_EX),
+        .found_EX(found_EX),
+        .PC_EX(real_PC_EX),
+        .branch_target_EX(br_target),
+        .br_EX(br),
+        .fail(fail)
+    );
+
     PC_ID PC_ID1(
         .clk(CPU_CLK),
         .bubbleD(bubbleD),
@@ -165,7 +186,9 @@ module RV32ICore(
         .debug_addr(CPU_Debug_InstCache_A2[31:2]),
         .debug_input(CPU_Debug_InstCache_WD2),
         .inst_ID(inst_ID),
-        .debug_data(CPU_Debug_InstCache_RD2)
+        .debug_data(CPU_Debug_InstCache_RD2),
+        .found_IF(found_IF),
+        .found_ID(found_ID)
     );
 
 
@@ -314,7 +337,9 @@ module RV32ICore(
         .reg_write_en_EX(reg_write_en_EX),
         .cache_write_en_EX(cache_write_en_EX),
         .alu_src1_EX(alu_src1_EX),
-        .alu_src2_EX(alu_src2_EX)
+        .alu_src2_EX(alu_src2_EX),
+        .found_ID(found_ID),
+        .found_EX(found_EX)
     );
 
     // CSR pipeline register
@@ -530,6 +555,7 @@ module RV32ICore(
         .alu_src1(alu_src1_EX),
         .alu_src2(alu_src2_EX),
         .miss(CacheMiss),
+        .fail(fail),
         .flushF(flushF),
         .bubbleF(bubbleF),
         .flushD(flushD),

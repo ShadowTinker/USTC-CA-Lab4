@@ -32,6 +32,8 @@ module IR_ID(
     input wire write_en,
     input wire [31:2] addr, debug_addr,
     input wire [31:0] debug_input,
+    input wire found_IF,
+    output wire found_ID,
     output wire [31:0] inst_ID,
     output wire [31:0] debug_data
     );

@@ -1,0 +1,5 @@
+*.pdf
+*.md
+*.docx
+*.zip
+Test/ASM-Benchmark/generate_inst/riscv32-gnu-toolchain-windows/*

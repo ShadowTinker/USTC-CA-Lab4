@@ -38,38 +38,14 @@ integer i;
 always@(posedge clk or posedge rst) begin
   if (rst) begin
     for (i = 0; i < BUFFER_SIZE; i = i + 1) begin
-      BranchJudge[i] <= 2'b10;
+      BranchJudge[i] <= 2'b00;
     end
   end else if (isBranch_EX == 1'b1) begin
     case(BranchJudge[tag_EX])
-      2'b00 : begin
-        if (br_EX == 1'b1) begin
-          BranchJudge[tag_EX] <= 2'b01;
-        end else begin
-          BranchJudge[tag_EX] <= 2'b00;
-        end
-      end
-      2'b01 : begin
-        if (br_EX == 1'b1) begin
-          BranchJudge[tag_EX] <= 2'b11;
-        end else begin
-          BranchJudge[tag_EX] <= 2'b00;
-        end
-      end
-      2'b10 : begin
-        if (br_EX == 1'b1) begin
-          BranchJudge[tag_EX] <= 2'b11;
-        end else begin
-          BranchJudge[tag_EX] <= 2'b00;
-        end
-      end
-      2'b11 : begin
-        if (br_EX == 1'b1) begin
-          BranchJudge[tag_EX] <= 2'b11;
-        end else begin
-          BranchJudge[tag_EX] <= 2'b10;
-        end
-      end
+      2'b00 : BranchJudge[tag_EX] = br_EX ? 2'b01 : 2'b00;
+      2'b01 : BranchJudge[tag_EX] = br_EX ? 2'b11 : 2'b00;
+      2'b10 : BranchJudge[tag_EX] = br_EX ? 2'b11 : 2'b00;
+      2'b11 : BranchJudge[tag_EX] = br_EX ? 2'b11 : 2'b10;
     endcase
   end
 end

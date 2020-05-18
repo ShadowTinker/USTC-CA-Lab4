@@ -87,10 +87,10 @@ module RV32ICore(
     wire found_IF;
     wire found_ID;
     wire found_EX;
-    wire [31:0] real_PC_EX;
+    wire [31:0] NPC_predicted_IF;
     wire fail;
 
-    assign real_PC_EX = PC_EX - 4;
+    assign PC_4 = PC_IF + 4;
     // MUX for op2 source
     assign op2 = op2_src ? imm : reg2;
     // Adder to compute PC_ID + Imm - 4
@@ -137,7 +137,8 @@ module RV32ICore(
         .NPC(NPC),
         .fail(fail),
         .found_EX(found_EX),
-        .PC_EX(PC_EX)
+        .PC_EX(PC_EX - 4),
+        .NPC_predicted_IF(NPC_predicted_IF)
     );
 
 
@@ -160,10 +161,10 @@ module RV32ICore(
         .rst(CPU_RST),
         .PC_IF(PC_IF),
         .found_IF(found_IF),
-        .NPC_predicted_IF(PC_4),
+        .NPC_predicted_IF(NPC_predicted_IF),
         .branch_EX(br_type_EX),
         .found_EX(found_EX),
-        .PC_EX(real_PC_EX),
+        .PC_EX(PC_EX - 4),
         .branch_target_EX(br_target),
         .br_EX(br),
         .fail(fail)
@@ -538,6 +539,7 @@ module RV32ICore(
     // Harzard Unit
     // ---------------------------------------------
     HarzardUnit HarzardUnit1(
+        .clk(CPU_CLK),
         .rst(CPU_RST),
         .reg1_srcD(inst_ID[19:15]),
         .reg2_srcD(inst_ID[24:20]),

@@ -49,7 +49,7 @@
 
 
 module HarzardUnit(
-    input wire rst,
+    input wire clk,rst,
     input wire [4:0] reg1_srcD, reg2_srcD, reg1_srcE, reg2_srcE, reg_dstE, reg_dstM, reg_dstW,
     input wire br, jalr, jal,
     input wire [1:0] src_reg_en,
@@ -187,4 +187,17 @@ module HarzardUnit(
         end
     end
     
+integer total, right, wrong;
+always @(posedge clk,posedge rst)
+    begin
+        if (rst) begin
+            total = 0;
+            wrong = 0;
+            right = 0;
+        end else begin
+            if (br) total = total + 1;
+            if (fail) wrong = wrong + 1;
+            right = total - wrong;
+        end
+    end
 endmodule

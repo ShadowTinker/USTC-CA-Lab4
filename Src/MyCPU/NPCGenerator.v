@@ -30,12 +30,16 @@
 module NPC_Generator(
     input wire [31:0] PC, jal_target, jalr_target, br_target,
     input wire jal, jalr, br,
+    input wire fail,found_EX,
+    input wire [31:0] PC_EX,
     output reg [31:0] NPC
     );
     
     always@(*) begin
-        if (br == 1) begin
+        if (br && fail) begin // 要跳转却预测错误时
             NPC <= br_target;
+        end else if ((!br) && fail) begin // 不要跳转却预测错误时
+            NPC <= PC_EX;
         end else if (jalr == 1) begin
             NPC <= jalr_target;
         end else if (jal == 1) begin

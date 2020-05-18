@@ -61,7 +61,7 @@ module Ctrl_EX(
     input wire alu_src1_ID,
     input wire [1:0] alu_src2_ID,
     input wire found_ID,
-    output wire found_EX,
+    output reg found_EX,
     output reg jalr_EX,
     output reg [3:0] ALU_func_EX,
     output reg [2:0] br_type_EX,
@@ -88,6 +88,7 @@ module Ctrl_EX(
         cache_write_en_EX = 3'h0;
         alu_src1_EX = 0;
         alu_src2_EX = 2'b0;
+        found_EX = 0;
     end
     
     always@(posedge clk)
@@ -106,6 +107,7 @@ module Ctrl_EX(
                 cache_write_en_EX <= 3'h0;
                 alu_src1_EX <= 0;
                 alu_src2_EX <= 2'b0;
+                found_EX <= 0;
             end
             else
             begin
@@ -120,6 +122,7 @@ module Ctrl_EX(
                 cache_write_en_EX <= cache_write_en_ID;
                 alu_src1_EX <= alu_src1_ID;
                 alu_src2_EX <= alu_src2_ID;
+                found_EX <= found_ID;
             end
         end
     

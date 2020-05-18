@@ -78,12 +78,6 @@ module HarzardUnit(
             flushE <= 1'b1;
             flushM <= 1'b0;
             flushW <= 1'b0;
-        end else if (br) begin
-            flushF <= 1'b0;
-            flushD <= 1'b1;
-            flushE <= 1'b1;
-            flushM <= 1'b0;
-            flushW <= 1'b0;
         end else if (jalr) begin
             flushF <= 1'b0;
             flushD <= 1'b1;

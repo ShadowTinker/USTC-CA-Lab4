@@ -26,6 +26,8 @@
 module PC_ID(
     input wire clk, bubbleD, flushD,
     input wire [31:0] PC_IF,
+    input wire found_IF,
+    output reg found_ID,
     output reg [31:0] PC_ID
     );
 
@@ -34,10 +36,13 @@ module PC_ID(
     always@(posedge clk)
         if (!bubbleD) 
         begin
-            if (flushD)
+            if (flushD) begin
+                found_ID <= 0;
                 PC_ID <= 0;
-            else 
+            end else begin
                 PC_ID <= PC_IF;
+                found_ID <= found_IF;
+            end
         end
     
 endmodule

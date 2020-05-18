@@ -91,8 +91,6 @@ module RV32ICore(
     wire fail;
 
     assign real_PC_EX = PC_EX - 4;
-    // Adder to compute PC + 4
-    assign PC_4 = PC_IF + 4;
     // MUX for op2 source
     assign op2 = op2_src ? imm : reg2;
     // Adder to compute PC_ID + Imm - 4
@@ -136,7 +134,10 @@ module RV32ICore(
         .jal(jal),
         .jalr(jalr_EX),
         .br(br),
-        .NPC(NPC)
+        .NPC(NPC),
+        .fail(fail),
+        .found_EX(found_EX),
+        .PC_EX(PC_EX)
     );
 
 
@@ -173,7 +174,9 @@ module RV32ICore(
         .bubbleD(bubbleD),
         .flushD(flushD),
         .PC_IF(PC_4),
-        .PC_ID(PC_ID)
+        .PC_ID(PC_ID),
+        .found_IF(found_IF),
+        .found_ID(found_ID)
     );
 
 
@@ -186,9 +189,7 @@ module RV32ICore(
         .debug_addr(CPU_Debug_InstCache_A2[31:2]),
         .debug_input(CPU_Debug_InstCache_WD2),
         .inst_ID(inst_ID),
-        .debug_data(CPU_Debug_InstCache_RD2),
-        .found_IF(found_IF),
-        .found_ID(found_ID)
+        .debug_data(CPU_Debug_InstCache_RD2)
     );
 
 
